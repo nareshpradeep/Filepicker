@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">File Picker</string>
+    <string name="ok_txt">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="settings">Settings</string>
+    <string name="notnow">Not Now</string>
+    <string name="cpr">Camera permissions required</string>
+    <string name="rpr">Read permissions required</string>
+    <string name="rwpr">Read/write permissions required</string>
+    <string name="lpr">Location permissions required</string>
+    <string name="aotayd">Allow the app to access your data.&lt;br /&gt; Tap Settings &gt; Permissions.</string>
+    <string name="messagedeleted">Message Deleted</string>
+    <string name="undo">Undo</string>
+    <string name="message">Message</string>
+</resources>

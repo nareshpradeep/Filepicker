@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:filterTouchesWhenObscured="true">
+
+    <RelativeLayout
+        android:id="@+id/rvMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/dialog_background"
+        android:paddingTop="5dp"
+        android:paddingBottom="@dimen/medium_margin">
+
+        <ImageView
+            android:id="@+id/iv_close_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/template_layout_bg"
+            android:contentDescription="@string/app_name"
+            android:foregroundGravity="center_horizontal"
+            app:srcCompat="@drawable/ic_moa_grey_round_close"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/ivIcon"
+            android:layout_width="@dimen/alert_icon_size_moa"
+            android:layout_height="@dimen/alert_icon_size_moa"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="@string/app_name"
+            app:srcCompat="@drawable/iv_msg_suucess_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvRedTitle"
+            style="@style/textsizeS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/ivIcon"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/red"
+            android:textSize="@dimen/textsize16" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_message"
+            style="@style/textsizeS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/tvRedTitle"
+            android:layout_marginBottom="40dp"
+            android:gravity="center"
+            android:lineSpacingExtra="5dp"
+            android:lineSpacingMultiplier="1.2"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textsize16" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/tv_message"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_3sdp"
+                android:background="@drawable/round_corner_red_bg"
+                android:gravity="center"
+                android:minWidth="110dp"
+                android:paddingLeft="30dp"
+                android:paddingTop="11dp"
+                android:paddingRight="30dp"
+                android:paddingBottom="11dp"
+                android:text="@string/cancel"
+                android:textAllCaps="true"
+                android:textColor="@color/red"
+                android:textSize="@dimen/textsize12"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_3sdp"
+                android:background="@drawable/button_bg_submit"
+                android:gravity="center"
+                android:minWidth="110dp"
+                android:paddingLeft="30dp"
+                android:paddingTop="11dp"
+                android:paddingRight="30dp"
+                android:paddingBottom="11dp"
+                android:text="@string/ok_txt"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textsize13"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

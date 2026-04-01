@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ok_txt">အိုကေ</string>
+    <string name="cancel">ပယ်ဖျက်သည်။</string>
+    <string name="settings">ဆက်တင်</string>
+    <string name="notnow">နောက်မှ</string>
+    <string name="cpr">ကင်မရာအသုံးပြုခွင့်ပေးရန် လိုအပ်ပါသည်။</string>
+    <string name="rpr">ဖတ်ခွင့်ပေးရန် လိုအပ်ပါသည်။</string>
+    <string name="rwpr">ဖတ်ခွင့်/ရေးခွင့်ပေးရန် လိုအပ်ပါသည်။</string>
+    <string name="lpr">တည်နေရာအတွက် ခွင့်ပြုချက်ပေးရန်လိုအပ်ပါသည်</string>
+    <string name="aotayd">လူကြီးမင်း၏ အချက်အလက်ကို &lt;br /&gt; အသုံးပြုရန် ဆက်တင်တွင် ပါမစ်ရှင်ပေးပါ။</string>
+</resources>

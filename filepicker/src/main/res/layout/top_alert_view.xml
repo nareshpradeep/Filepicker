@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.Design.Snackbar"
+    class="com.digitral.filepicker.TopSnackbar$SnackbarLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:filterTouchesWhenObscured="true"
+    android:layout_gravity="top"
+    android:elevation="@dimen/_19dp"
+    android:background="@color/transparent"/>
