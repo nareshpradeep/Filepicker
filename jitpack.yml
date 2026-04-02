@@ -1,4 +1,6 @@
+# JDK used only on JitPack’s build VMs — not your Android Studio JDK.
+# AGP 8.13+ requires JDK 17+; JDK 11 will fail the remote build.
 jdk:
-  - openjdk11
+  - openjdk21
 before_install:
   - ./scripts/prepareJitpackEnvironment.sh

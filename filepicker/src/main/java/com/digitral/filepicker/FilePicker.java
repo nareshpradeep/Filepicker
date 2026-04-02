@@ -3,13 +3,8 @@ package com.digitral.filepicker;
 import android.content.Intent;
 import android.net.Uri;
 
-import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
-
-import com.digitral.filepicker.controls.ActivityResultHandler;
-
-import java.util.Map;
 
 public abstract class FilePicker {
 
@@ -26,8 +21,6 @@ public abstract class FilePicker {
     public abstract void launchMap(int requestCode, Object returnObject);
 
     public abstract void launchGallery(int requestCode, Object returnObject);
-
-//    public abstract void launchGallery(int requestCode, @Nullable ActivityResultHandler<Intent, ActivityResult> activityResultHandler);
 
     public abstract void pickPdf(int requestCode, Object returnObject);
 
@@ -57,9 +50,9 @@ public abstract class FilePicker {
 
     //public abstract void showAppSettingsPopup();
 
-    public abstract void setActivityLauncher(ActivityResultHandler<Intent, ActivityResult> handler);
+    public abstract void setActivityLauncher(FilePickerIntentLauncher launcher);
 
-    public abstract void setPermissionLauncher(ActivityResultHandler<String[], Map<String, Boolean>> handler);
+    public abstract void setPermissionLauncher(FilePickerPermissionLauncher launcher);
 
     public abstract void setPickMediaLauncher(ActivityResultLauncher<PickVisualMediaRequest> launcher);
 

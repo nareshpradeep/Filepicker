@@ -46,7 +46,6 @@ import androidx.lifecycle.LifecycleOwner;
 import com.digitral.filepicker.FilePicker;
 import com.digitral.filepicker.R;
 import com.digitral.filepicker.callback.FilePickerCallback;
-import com.digitral.filepicker.controls.ActivityResultHandler;
 import com.digitral.filepicker.utils.FileUtils;
 import com.digitral.filepicker.utils.ImageCompression;
 import com.digitral.filepicker.utils.TraceUtils;
@@ -117,9 +116,9 @@ public class FilePickerImpl extends FilePicker {
 
     public static boolean filePickerIsInProcess = false;
 
-    public ActivityResultHandler<String[], Map<String, Boolean>> permissionLauncher;
+    public FilePickerPermissionLauncher permissionLauncher;
 
-    public ActivityResultHandler<Intent, ActivityResult> activityLauncher;
+    public FilePickerIntentLauncher activityLauncher;
 
     public ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
 
@@ -716,13 +715,13 @@ public class FilePickerImpl extends FilePicker {
     }
 
     @Override
-    public void setActivityLauncher(ActivityResultHandler<Intent, ActivityResult> handler) {
-        this.activityLauncher = handler;
+    public void setActivityLauncher(FilePickerIntentLauncher launcher) {
+        this.activityLauncher = launcher;
     }
 
     @Override
-    public void setPermissionLauncher(ActivityResultHandler<String[], Map<String, Boolean>> handler) {
-        this.permissionLauncher = handler;
+    public void setPermissionLauncher(FilePickerPermissionLauncher launcher) {
+        this.permissionLauncher = launcher;
     }
 
     @Override
