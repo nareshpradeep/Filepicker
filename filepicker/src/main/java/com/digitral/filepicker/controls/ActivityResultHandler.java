@@ -9,6 +9,8 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 
 import java.util.Map;
@@ -60,6 +62,15 @@ public class ActivityResultHandler<Input, Result> {
                                   @NonNull ActivityResultContract<Input, Result> contract,
                                   @Nullable OnActivityResult<Result> onActivityResult) {
         this.onActivityResult = onActivityResult;
+        if (caller instanceof LifecycleOwner) {
+            Lifecycle.State state = ((LifecycleOwner) caller).getLifecycle().getCurrentState();
+            if (state.isAtLeast(Lifecycle.State.STARTED)) {
+                throw new IllegalStateException(
+                        "Register activity-result handlers before the LifecycleOwner reaches STARTED "
+                                + "(e.g. call FilePickerLaunchers.intentLauncher/permissionLauncher from onCreate, "
+                                + "not from a click listener). Current lifecycle state: " + state);
+            }
+        }
         this.launcher = caller.registerForActivityResult(contract, this::callOnActivityResult);
     }
 

@@ -13,4 +13,9 @@
     <string name="messagedeleted">Message Deleted</string>
     <string name="undo">Undo</string>
     <string name="message">Message</string>
+    <string name="selectphoto">Select Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="delete">Delete</string>
+    <string name="location">Location</string>
 </resources>

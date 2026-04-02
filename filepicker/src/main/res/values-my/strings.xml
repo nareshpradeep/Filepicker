@@ -9,4 +9,9 @@
     <string name="rwpr">ဖတ်ခွင့်/ရေးခွင့်ပေးရန် လိုအပ်ပါသည်။</string>
     <string name="lpr">တည်နေရာအတွက် ခွင့်ပြုချက်ပေးရန်လိုအပ်ပါသည်</string>
     <string name="aotayd">လူကြီးမင်း၏ အချက်အလက်ကို &lt;br /&gt; အသုံးပြုရန် ဆက်တင်တွင် ပါမစ်ရှင်ပေးပါ။</string>
+    <string name="selectphoto">Select Photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">camera</string>
+    <string name="delete">Delete</string>
+    <string name="location">Location</string>
 </resources>

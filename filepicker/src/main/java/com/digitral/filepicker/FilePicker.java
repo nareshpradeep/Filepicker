@@ -3,8 +3,11 @@ package com.digitral.filepicker;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.activity.result.ActivityResultCaller;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
+
+import com.digitral.filepicker.callback.FilePickerCallback;
 
 public abstract class FilePicker {
 
@@ -50,10 +53,12 @@ public abstract class FilePicker {
 
     //public abstract void showAppSettingsPopup();
 
-    public abstract void setActivityLauncher(FilePickerIntentLauncher launcher);
+    //public abstract void setActivityLauncher(FilePickerIntentLauncher launcher);
 
-    public abstract void setPermissionLauncher(FilePickerPermissionLauncher launcher);
+    //public abstract void setPermissionLauncher(FilePickerPermissionLauncher launcher);
 
-    public abstract void setPickMediaLauncher(ActivityResultLauncher<PickVisualMediaRequest> launcher);
+    //public abstract void setPickMediaLauncher(ActivityResultLauncher<PickVisualMediaRequest> launcher);
+
+    public abstract void pickImage(FilePickerCallback callback);
 
 }

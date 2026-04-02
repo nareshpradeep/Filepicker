@@ -9,4 +9,5 @@
     <dimen name="textsize16">16sp</dimen>
     <dimen name="textsize13">13sp</dimen>
     <dimen name="textsize12">12sp</dimen>
+    <dimen name="small_margin">3dp</dimen>
 </resources>

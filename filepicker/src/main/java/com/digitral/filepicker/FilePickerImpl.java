@@ -32,6 +32,7 @@ import android.view.Display;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCaller;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.PickVisualMediaRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -46,6 +47,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.digitral.filepicker.FilePicker;
 import com.digitral.filepicker.R;
 import com.digitral.filepicker.callback.FilePickerCallback;
+import com.digitral.filepicker.controls.ActivityResultHandler;
 import com.digitral.filepicker.utils.FileUtils;
 import com.digitral.filepicker.utils.ImageCompression;
 import com.digitral.filepicker.utils.TraceUtils;
@@ -88,9 +90,9 @@ public class FilePickerImpl extends FilePicker {
     private static final String FILE_NAME = "fileName";
     public static final String URI_VAL = "uri";
 
-    private Activity activity;
+    private AppCompatActivity activity;
 
-    private AppCompatActivity appCompatActivity;
+    //private AppCompatActivity appCompatActivity;
 
     private final FilePickerCallback callback;
 
@@ -116,9 +118,13 @@ public class FilePickerImpl extends FilePicker {
 
     public static boolean filePickerIsInProcess = false;
 
-    public FilePickerPermissionLauncher permissionLauncher;
+    /*public FilePickerPermissionLauncher permissionLauncher;
 
-    public FilePickerIntentLauncher activityLauncher;
+    public FilePickerIntentLauncher activityLauncher;*/
+
+    public ActivityResultHandler<String[], Map<String, Boolean>> permissionLauncher;
+
+    public ActivityResultHandler<Intent, ActivityResult> activityLauncher;
 
     public ActivityResultLauncher<PickVisualMediaRequest> pickMediaLauncher;
 
@@ -132,11 +138,28 @@ public class FilePickerImpl extends FilePicker {
         return context.getApplicationContext().getPackageName() + ".fileprovider";
     }
 
-    private FilePickerImpl(Activity activity, FilePickerCallback callback) {
+    private FilePickerImpl(AppCompatActivity activity, FilePickerCallback callback, ActivityResultCaller caller) {
 
         this.callback = callback;
 
         this.activity = activity;
+
+        this.permissionLauncher = ActivityResultHandler.registerPermissionForResult(caller);
+
+        this.activityLauncher = ActivityResultHandler.registerActivityForResult(caller);
+
+        // Register on the activity, not on {@code caller}. If {@code caller} is a Fragment that is
+        // dismissed before the picker returns (e.g. PhotoOptionBottomSheet), fragment-scoped
+        // registration may never deliver the result.
+        this.pickMediaLauncher = activity.registerForActivityResult(
+                new ActivityResultContracts.PickVisualMedia(),
+                uri -> {
+                    if (uri != null) {
+                        TraceUtils.logE("Ooredoo", "In pickMedia::");
+                        this.onGalleryFileSelected(RESULT_OK, new Intent(), uri);
+                    }
+                });
+
 
         FilePickerImpl.filePickerIsInProcess = true;
 
@@ -144,9 +167,9 @@ public class FilePickerImpl extends FilePicker {
 
     }
 
-    public static FilePicker newInstance(Activity context, FilePickerCallback callback) {
+    public static FilePicker newInstance(AppCompatActivity context, FilePickerCallback callback, ActivityResultCaller caller) {
 
-        return new FilePickerImpl(context, callback);
+        return new FilePickerImpl(context, callback, caller);
     }
 
     public static void setLifecycleOwner(LifecycleOwner lOwner) {
@@ -715,6 +738,41 @@ public class FilePickerImpl extends FilePicker {
     }
 
     @Override
+    public void pickImage(FilePickerCallback callback) {
+        PhotoOptionBottomSheet sheet = PhotoOptionBottomSheet.newInstance(callback);
+
+        sheet.setOptionListener(new PhotoOptionBottomSheet.OptionListener() {
+            @Override
+            public void onCameraClick() {
+                if (compressEnabled) {
+                    compressSize(80);
+                }
+                launchCamera(LAUNCH_CAMERA,null);
+            }
+
+            @Override
+            public void onGalleryClick() {
+                if (compressEnabled) {
+                    compressSize(80);
+                }
+                launchGallery(LAUNCH_GALLERY, null);
+            }
+
+            @Override
+            public void onRemoveClick() {
+                // optional
+            }
+
+            @Override
+            public void onLocationClick() {
+                // optional
+            }
+        });
+
+        sheet.show(activity.getSupportFragmentManager(), "FilePicker");
+    }
+
+    /*@Override
     public void setActivityLauncher(FilePickerIntentLauncher launcher) {
         this.activityLauncher = launcher;
     }
@@ -727,7 +785,7 @@ public class FilePickerImpl extends FilePicker {
     @Override
     public void setPickMediaLauncher(ActivityResultLauncher<PickVisualMediaRequest> launcher) {
         this.pickMediaLauncher = launcher;
-    }
+    }*/
 
     @Override
     public void pickDocs(int requestCode) {
@@ -1031,6 +1089,13 @@ public class FilePickerImpl extends FilePicker {
     @Override
     public void onGalleryFileSelected(int resultCode, Intent data, Uri _uri) {
 
+        if (_uri == null) {
+            callback.onResult(this.requestCode, Activity.RESULT_CANCELED, data, this.returnObject);
+            resetFilePickerProcess();
+            return;
+        }
+        data.setData(_uri);
+
         String path = getPath(_uri);
 
         if (cropEnabled) {
@@ -1041,17 +1106,34 @@ public class FilePickerImpl extends FilePicker {
 
             TraceUtils.logE("WS", "WS: Filesize before: " + fileSize);
 
-            String filePath = new ImageCompression(activity).compressImage(new File(path).getAbsolutePath(), fileSize, 2);
+            try {
+                String sourcePath = path;
+                if (TextUtils.isEmpty(sourcePath) || !new File(sourcePath).isFile()) {
+                    File cached = copyPickVisualUriToCache(_uri);
+                    if (cached == null) {
+                        TraceUtils.logE("FilePicker", "compress: could not read picked URI");
+                        callback.onResult(this.requestCode, Activity.RESULT_CANCELED, data, this.returnObject);
+                        resetFilePickerProcess();
+                        return;
+                    }
+                    sourcePath = cached.getAbsolutePath();
+                }
+                String filePath = new ImageCompression(activity).compressImage(sourcePath, fileSize, 2);
 
-            data.putExtra(FILE_PATH, filePath);
+                data.putExtra(FILE_PATH, filePath);
 
-            data.putExtra(FILE_NAME, Utils.getFileName(filePath));
+                data.putExtra(FILE_NAME, Utils.getFileName(filePath));
 
-            writeWaterMarkIfRequired(Utils.decodeImage(filePath, activity), activity, filePath, waterMarkText);
+                writeWaterMarkIfRequired(Utils.decodeImage(filePath, activity), activity, filePath, waterMarkText);
 
-            callback.onResult(this.requestCode, resultCode, data, this.returnObject);
+                callback.onResult(this.requestCode, resultCode, data, this.returnObject);
 
-            resetFilePickerProcess();
+                resetFilePickerProcess();
+            } catch (Exception e) {
+                TraceUtils.logException(e);
+                callback.onResult(this.requestCode, Activity.RESULT_CANCELED, data, this.returnObject);
+                resetFilePickerProcess();
+            }
 
         } else {
 
@@ -1075,6 +1157,8 @@ public class FilePickerImpl extends FilePicker {
                     FileOutputStream outputStream = new FileOutputStream(file);
                     //                                IOUtils.copyStream(inputStream, outputStream);
                     ByteStreams.copy(inputStream, outputStream);
+                    outputStream.close();
+                    inputStream.close();
 
                     data.putExtra(FILE_PATH, file.getAbsolutePath());
                     data.putExtra(FILE_NAME, Utils.getFileName(file.getAbsolutePath()));
@@ -1086,6 +1170,7 @@ public class FilePickerImpl extends FilePicker {
 
             } catch (IOException e) {
                 TraceUtils.logException(e);
+                callback.onResult(this.requestCode, Activity.RESULT_CANCELED, data, this.returnObject);
                 resetFilePickerProcess();
             } finally {
                 if (parcelFileDescriptor != null) {
@@ -1097,6 +1182,26 @@ public class FilePickerImpl extends FilePicker {
                 }
             }
 
+        }
+    }
+
+    @Nullable
+    private File copyPickVisualUriToCache(@NonNull Uri sourceUri) throws IOException {
+        try (ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(sourceUri, "r", null)) {
+            if (pfd == null) {
+                return null;
+            }
+            String cacheName = FileUtils.getFilePath(activity, sourceUri);
+            if (TextUtils.isEmpty(cacheName)) {
+                cacheName = "gallery_" + System.currentTimeMillis() + ".jpg";
+            }
+            cacheName = cacheName.replaceAll("[\\\\/]+", "_");
+            File file = new File(activity.getCacheDir(), cacheName);
+            try (FileInputStream in = new FileInputStream(pfd.getFileDescriptor());
+                 FileOutputStream out = new FileOutputStream(file)) {
+                ByteStreams.copy(in, out);
+            }
+            return file;
         }
     }
 
@@ -1195,9 +1300,18 @@ public class FilePickerImpl extends FilePicker {
 
 //            Crop.of(fileUri, pathUri).asSquare().start(activity);
 
-            Crop.of(stableUri, pathUri).withMaxSize(width, height).start(activity);
+            //Crop.of(stableUri, pathUri).withMaxSize(width, height).start(activity);
 //            Crop.of(fileUri, pathUri).withAspect(height, width).start(activity);
 //            Crop.of(fileUri, pathUri).withAspect(2.12, 1).start(activity);
+
+            Intent cropIntent = Crop.of(stableUri, pathUri).withMaxSize(width, height).getIntent(activity);
+            if (!ensureActivityLauncher()) {
+                return;
+            }
+            // Do not use Crop.start(activity): it relies on deprecated Activity#onActivityResult,
+            // which many hosts never forward. Use the same ActivityResult pipeline as camera/gallery.
+            activityLauncher.launch(cropIntent, result ->
+                    onActivityResult(Crop.REQUEST_CROP, result.getResultCode(), result.getData()));
 
 
         } catch (ActivityNotFoundException anfe) {
