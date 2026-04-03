@@ -54,6 +54,7 @@ import com.digitral.filepicker.utils.TraceUtils;
 import com.digitral.filepicker.utils.Utils;
 import com.google.common.io.ByteStreams;
 import com.soundcloud.android.crop.Crop;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1304,14 +1305,23 @@ public class FilePickerImpl extends FilePicker {
 //            Crop.of(fileUri, pathUri).withAspect(height, width).start(activity);
 //            Crop.of(fileUri, pathUri).withAspect(2.12, 1).start(activity);
 
-            Intent cropIntent = Crop.of(stableUri, pathUri).withMaxSize(width, height).getIntent(activity);
+            /*Intent cropIntent = Crop.of(stableUri, pathUri).withMaxSize(width, height).getIntent(activity);
             if (!ensureActivityLauncher()) {
                 return;
             }
             // Do not use Crop.start(activity): it relies on deprecated Activity#onActivityResult,
             // which many hosts never forward. Use the same ActivityResult pipeline as camera/gallery.
             activityLauncher.launch(cropIntent, result ->
+                    onActivityResult(Crop.REQUEST_CROP, result.getResultCode(), result.getData()));*/
+
+
+            Intent intent = UCrop.of(stableUri, pathUri)
+                    .withMaxResultSize(width, height)
+                    .getIntent(activity);
+
+            activityLauncher.launch(intent, result ->
                     onActivityResult(Crop.REQUEST_CROP, result.getResultCode(), result.getData()));
+
 
 
         } catch (ActivityNotFoundException anfe) {
