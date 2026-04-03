@@ -51,9 +51,9 @@ publishing {
     publications {
         release(MavenPublication) {
             // JitPack passes -Pgroup / -Pversion (e.g. com.github.USER and tag).
-            groupId = findProperty('group') ?: 'com.yourcompany.filepicker'
+            groupId = 'com.yourcompany.filepicker'
             artifactId = 'filepicker'
-            version = findProperty('version') ?: '1.0.0'
+            version = '1.0.0'
 
             afterEvaluate {
                 from components["release"]
