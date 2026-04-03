@@ -3,4 +3,9 @@
 jdk:
   - openjdk21
 before_install:
+  - chmod +x gradlew scripts/prepareJitpackEnvironment.sh
   - ./scripts/prepareJitpackEnvironment.sh
+# JitPack defaults to ./gradlew publishToMavenLocal on the *root* project only.
+# maven-publish is applied on :filepicker, so publish the library module explicitly:
+install:
+  - ./gradlew :filepicker:publishReleasePublicationToMavenLocal --no-daemon
