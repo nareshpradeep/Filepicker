@@ -53,7 +53,6 @@ import com.digitral.filepicker.utils.ImageCompression;
 import com.digitral.filepicker.utils.TraceUtils;
 import com.digitral.filepicker.utils.Utils;
 import com.google.common.io.ByteStreams;
-import com.soundcloud.android.crop.Crop;
 import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
@@ -1058,7 +1057,7 @@ public class FilePickerImpl extends FilePicker {
                     }
                     break;
 
-                    case Crop.REQUEST_CROP:
+                    case UCrop.REQUEST_CROP:
 
                         data.putExtra(FILE_PATH, getPath(pathUri));
 
@@ -1320,7 +1319,7 @@ public class FilePickerImpl extends FilePicker {
                     .getIntent(activity);
 
             activityLauncher.launch(intent, result ->
-                    onActivityResult(Crop.REQUEST_CROP, result.getResultCode(), result.getData()));
+                    onActivityResult(UCrop.REQUEST_CROP, result.getResultCode(), result.getData()));
 
 
 
