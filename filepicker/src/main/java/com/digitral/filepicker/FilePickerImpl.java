@@ -94,7 +94,7 @@ public class FilePickerImpl extends FilePicker {
 
     //private AppCompatActivity appCompatActivity;
 
-    private final FilePickerCallback callback;
+    private FilePickerCallback callback;
 
     private Uri pathUri;
 
@@ -739,6 +739,7 @@ public class FilePickerImpl extends FilePicker {
 
     @Override
     public void pickImage(FilePickerCallback callback) {
+        this.callback = callback;
         PhotoOptionBottomSheet sheet = PhotoOptionBottomSheet.newInstance(callback);
 
         sheet.setOptionListener(new PhotoOptionBottomSheet.OptionListener() {
