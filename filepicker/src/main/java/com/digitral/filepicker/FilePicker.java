@@ -51,9 +51,13 @@ public abstract class FilePicker {
 
     public abstract void pickVideo(int requestCode);
 
+    public abstract void setCallback(FilePickerCallback callback);
+
+    public abstract void clear();
+
     //public abstract void showAppSettingsPopup();
 
-    //public abstract void setActivityLauncher(FilePickerIntentLauncher launcher);
+    //public abstract voiker(FilePickerIntentLauncher launcher);
 
     //public abstract void setPermissionLauncher(FilePickerPermissionLauncher launcher);
 

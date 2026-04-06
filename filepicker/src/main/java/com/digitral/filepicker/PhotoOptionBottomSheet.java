@@ -226,8 +226,6 @@ public class PhotoOptionBottomSheet extends BottomSheetDialogFragment
     private String title;
     private int type = 0;
 
-    private FilePickerCallback callback;
-
     // 🔥 Listener for communicating user action
     public interface OptionListener {
         void onCameraClick();
@@ -239,15 +237,10 @@ public class PhotoOptionBottomSheet extends BottomSheetDialogFragment
     private OptionListener optionListener;
 
     // ✅ Factory method (fixed)
-    public static PhotoOptionBottomSheet newInstance(FilePickerCallback callback) {
-        PhotoOptionBottomSheet sheet = new PhotoOptionBottomSheet();
-        sheet.setCallback(callback);
-        return sheet;
+    public static PhotoOptionBottomSheet newInstance() {
+        return new PhotoOptionBottomSheet();
     }
 
-    private void setCallback(FilePickerCallback callback) {
-        this.callback = callback;
-    }
 
     public void setOptionListener(OptionListener listener) {
         this.optionListener = listener;

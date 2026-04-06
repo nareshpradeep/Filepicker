@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.view.Display;
 import android.widget.Toast;
 
+import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCaller;
 import androidx.activity.result.ActivityResultLauncher;
@@ -91,6 +92,8 @@ public class FilePickerImpl extends FilePicker {
     public static final String URI_VAL = "uri";
 
     private AppCompatActivity activity;
+
+    private ComponentActivity activityComponent;
 
     //private AppCompatActivity appCompatActivity;
 
@@ -738,13 +741,35 @@ public class FilePickerImpl extends FilePicker {
     }
 
     @Override
+    public void setCallback(FilePickerCallback callback) {
+        this.callback = callback;
+    }
+
+    @Override
+    public void clear() {
+        this.callback = null;
+        this.pathUri = null;
+        this.cropEnabled = true;
+        this.compressEnabled = false;
+        this.waterMarkEnabled = false;
+        this.fileSize = 0;
+        this.mediaPath = "";
+        this.requestCode = -1;
+        this.requiredFilePath = "";
+        this.returnObject = null;
+        this.waterMarkText = "";
+        resetFilePickerProcess();
+    }
+
+    @Override
     public void pickImage(FilePickerCallback callback) {
         this.callback = callback;
-        PhotoOptionBottomSheet sheet = PhotoOptionBottomSheet.newInstance(callback);
+        PhotoOptionBottomSheet sheet = PhotoOptionBottomSheet.newInstance();
 
         sheet.setOptionListener(new PhotoOptionBottomSheet.OptionListener() {
             @Override
             public void onCameraClick() {
+                clear();
                 if (compressEnabled) {
                     compressSize(80);
                 }
@@ -753,6 +778,7 @@ public class FilePickerImpl extends FilePicker {
 
             @Override
             public void onGalleryClick() {
+                clear();
                 if (compressEnabled) {
                     compressSize(80);
                 }
